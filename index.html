@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livewell Equity - Become a Landlord</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .banner {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+    }
+    .banner h1 {
+      font-size: 36px;
+      margin: 0;
+      padding-right: 10px;
+    }
+    .banner p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .banner img {
+      width: 100px;
+      height: auto;
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      margin-left: 20px; 
+    }
+    .cta-button {
+      background-color: #ff5722;
+      color: white;
+      padding: 15px 30px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 18px;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+    .cta-button:hover {
+      background-color: #e64a19;
+    }
+    .contact-info {
+      background-color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .contact-info p {
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .contact-info img {
+      width: 40px;
+      height: auto;
+      margin: -10px;
+    }
+    form {
+      margin: 20px auto;
+      width: 80%;
+      max-width: 500px;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+    form label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    form input[type="text"], form input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    form input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    form input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    #seats-remaining {
+      font-size: 18px;
+      font-weight: bold;
+      color: red;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #admin-reset-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    #admin-reset-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="banner">
+    <h1>Become a Landlord through Fractional Ownership</h1>
+    <p>Co-own properties in Lagos with an investment as low as 500,000!</p>
+    
+    <a href="https://chat.whatsapp.com/CxzbNSjkv4WFyx2Y9V2WYd" class="cta-button">Book a Slot Now</a>
+  </div>
+
+  <div id="seats-remaining">Seats Available: 200</div>
+
+  <form id="booking-form" action="https://formspree.io/f/xgvwgglw" method="POST">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" name="name" required>
+    
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" name="phone" required>
+
+    <input type="submit" value="Submit Booking">
+  </form>
+
+  <button id="admin-reset-btn" onclick="adminReset()">Admin Reset</button>
+
+  <div class="contact-info">
+    <p>Contact us:</p>
+    <p>Email: <a href="mailto:livewell.equity@gmail.com">livewell.equity@gmail.com</a></p>
+    <p>Phone: 07045786155 | 08021712005</p>
+    <p>Address: 15, Ijegun Road, Ikotun, Beside Addosser Microfinance Bank</p>
+    <img src="/IMG-20240813-WA0264(1).jpg" alt="Location Icon">
+  </div>
+
+  <script>
+    let availableSeats = localStorage.getItem('availableSeats') || 200;
+    let serialNumber = localStorage.getItem('serialNumber') || 1;
+
+    document.getElementById("seats-remaining").innerText = "Seats Available: " + availableSeats;
+
+    // Check if the user has already submitted
+    if (localStorage.getItem('formSubmitted')) {
+      document.getElementById("booking-form").innerHTML = "<p>You have already submitted this form. Your slot number is " + localStorage.getItem('assignedSerial') + ".</p>";
+    }
+
+    document.getElementById("booking-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Prevent multiple submissions
+      if (localStorage.getItem('formSubmitted')) {
+        alert("You have already submitted this form.");
+        return;
+      }
+
+      if (availableSeats > 0) {
+        availableSeats--;
+        localStorage.setItem('availableSeats', availableSeats); // Save updated seats
+        localStorage.setItem('serialNumber', serialNumber); // Save updated serial number
+        localStorage.setItem('assignedSerial', serialNumber); // Save assigned serial number
+        const assignedSerial = serialNumber; // Store the serial number to use in the alert
+
+        serialNumber++; // Increment for next user
+        localStorage.setItem('formSubmitted', true); // Mark form as submitted
+
+        document.getElementById("seats-remaining").innerText = "Seats Available: " + availableSeats;
+        alert("Your slot number is " + assignedSerial);
+
+        // Prepare the form data to send
+        const formData = new FormData(this);
+
+        // Send acknowledgement email (via Formspree)
+        fetch(this.action, {
+          method: 'POST',
+          body: formData,
+        }).then(response => {
+          if (response.ok) {
+            // Acknowledge email sent to user
+            sendAcknowledgementEmail(assignedSerial, this.email.value);
+          } else {
+            alert("There was a problem with your submission. Please try again.");
+          }
+        });
+
+        if (availableSeats === 0) {
+          document.getElementById("booking-form").innerHTML = "<p>Sorry, all seats are filled!</p>";
+        }
+
+      } else {
+        alert("Sorry, all seats are already taken.");
+      }
+    });
+
+    // Function to send acknowledgement email
+    function sendAcknowledgementEmail(slotNumber, email) {
+      // Assuming you have a backend to send email, this is a placeholder
+      const data = {
+        slotNumber: slotNumber,
+        email: email,
+      };
+
+      // Here you would typically make a POST request to your backend
+      fetch('https://your-backend.com/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(response => {
+        if (response.ok) {
+          console.log("Acknowledgement email sent successfully.");
+        } else {
+          console.error("Failed to send acknowledgement email.");
+        }
+      });
+    }
+
+    // Admin Reset function (password protected)
+    function adminReset() {
+      let password = prompt("Enter admin password to reset seats:");
+      if (password === "admin123") { // Replace with your secure password
+        availableSeats = 200;
+        serialNumber = 1;
+        localStorage.removeItem('formSubmitted');
+        localStorage.setItem('availableSeats', availableSeats);
+        localStorage.setItem('serialNumber', serialNumber);
+        document.getElementById("seats-remaining").innerText = "Seats Available: " + availableSeats;
+        document.getElementById("booking-form").innerHTML = `
+          <label for="name">Full Name:</label>
+          <input type="text" id="name" name="name" required>
+          
+          <label for="email">Email Address:</label>
+          <input type="email" id="email" name="email" required>
+  
+          <label for="phone">Phone Number:</label>
+          <input type="text" id="phone" name="phone" required>
+  
+          <input type="submit" value="Submit Booking">
+        `;
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
+
+
